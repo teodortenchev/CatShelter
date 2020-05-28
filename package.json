@@ -1,0 +1,11 @@
+{
+  "name": "catshelter",
+  "version": "1.0.0",
+  "description": "A cat shelter app.",
+  "main": "index.js",
+  "scripts": {
+    "test": "test"
+  },
+  "author": "Ted",
+  "license": "ISC"
+}
