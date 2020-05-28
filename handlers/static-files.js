@@ -20,6 +20,9 @@ function getContentType (url) {
     else if (url.endsWith('gif')) {
         return 'image/gif';
     }
+    else if (url.endsWith('ico')) {
+        return 'image/x-icon'      
+    }
 };
 
 module.exports = (req, res) => {
