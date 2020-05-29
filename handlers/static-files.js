@@ -21,8 +21,8 @@ function getContentType (url) {
         return 'image/gif';
     }
     else if (url.endsWith('ico')) {
-        return 'image/x-icon'      
-    }
+        return 'image/x-icon';
+    } 
 };
 
 module.exports = (req, res) => {
