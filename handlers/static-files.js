@@ -30,7 +30,7 @@ module.exports = (req, res) => {
 
     if (pathname.startsWith('/content') && req.method === 'GET') {
 
-        fs.readFile(`./${pathname}`, 'utf-8', (err, data) => {
+        fs.readFile(`./${pathname}`, (err, data) => {
             if(err) {
                 console.log(err);
                 res.writeHead(404, {'Content-Type': 'text/plain'});
@@ -40,7 +40,7 @@ module.exports = (req, res) => {
             }
 
             console.log(pathname);
-
+            console.log(getContentType(pathname));
             res.writeHead(200, 
                 {'Content-Type': getContentType(pathname)});
 
