@@ -25,10 +25,60 @@ module.exports = (req, res) => {
                 return;
             }
 
-            res.writeHead(200, { 'Content-Type': 'text/html' });
-            res.write(data);
-            res.end();
+            fs.readFile('./data/breeds.json', (err, breedsData) => {
+                if (err) {
+                    return err;
+                }
+
+                let breeds = JSON.parse(breedsData);
+                let catBreedsPlaceholder = breeds.map((breed) => `<option value="${breed}">${breed}</option>`);
+                let modifiedData = data.toString().replace(`{{catBreeds}}`, catBreedsPlaceholder);
+
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.write(modifiedData);
+                res.end();
+            });
+
+
         });
+    }
+    else if (path === '/cats/add-cat' && req.method === 'POST') {
+        let form = new formidable.IncomingForm();
+
+        form.parse(req, (err, fields, files) => {
+            if (err) {
+                return err;
+            }
+
+            let oldPath = files.upload.path;
+            let newPath = './content/images/' + files.upload.name;
+
+            fs.rename(oldPath, newPath, (err) => {
+                if (err) throw err;
+                console.log('File was uploaded successfully')
+            });
+
+            fs.readFile('./data/cats.json', (err, data) => {
+                if (err) throw err;
+
+                let allCats = JSON.parse(data);
+
+                allCats.push({
+                    id: allCats.length + 1,
+                    ...fields,
+                    image: files.upload.name
+                });
+
+                let json = JSON.stringify(allCats);
+
+                fs.writeFile('./data/cats.json', json, () => {
+                    res.writeHead(302, { 'Location' : '/'});
+                    res.end();
+                });
+            });
+        });
+
+
     }
     else if (pathname === '/cats/add-breed' && req.method === 'GET') {
         let filepath = path.normalize(
