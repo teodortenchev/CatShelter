@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const qs = require('querystring');
 const formidable = require('formidable');
+const bodyParser = require('body-parser')
 const breeds = require('../data/breeds');
 const cats = require('../data/cats');
 
@@ -16,37 +17,74 @@ module.exports = (req, res) => {
         )
 
         fs.readFile(filepath, (err, data) => {
-            if(err) {
+            if (err) {
                 console.log(err);
-                res.writeHead(404, {'Content-Type': 'text/plain'});
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
                 res.write('404 not found');
                 res.end();
                 return;
             }
 
-            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
         });
-    } 
+    }
     else if (pathname === '/cats/add-breed' && req.method === 'GET') {
         let filepath = path.normalize(
             path.join(__dirname, '../views/addBreed.html')
         )
 
         fs.readFile(filepath, (err, data) => {
-            if(err) {
+            if (err) {
                 console.log(err);
-                res.writeHead(404, {'Content-Type': 'text/plain'});
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
                 res.write('404 not found');
                 res.end();
                 return;
             }
 
-            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.writeHead(200, { 'Content-Type': 'text/html' });
             res.write(data);
             res.end();
         });
+    }
+    else if (pathname === '/cats/add-breed' && req.method === 'POST') {
+
+        let formData = '';
+
+
+        req.on('data', function (data) {
+            formData += data;
+
+            if (formData.length > 1e6) {
+                req.connection.destroy();
+            }
+        });
+
+        req.on('end', function () {
+            let body = qs.parse(formData);
+
+            fs.readFile('./data/breeds.json', (err, data) => {
+                if (err) {
+                    return err;
+                }
+
+                let breeds = JSON.parse(data);
+                breeds.push(body.breed);
+                let json = JSON.stringify(breeds);
+
+                fs.writeFile('./data/breeds.json', json, () => console.log('Breed added successfully.'));
+            });
+
+            res.writeHead(302, { 'Location': '/' });
+            res.end();
+        });
+
+
+
+
+
     }
     else {
         return true;
