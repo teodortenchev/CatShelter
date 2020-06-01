@@ -42,21 +42,24 @@ module.exports = (req, res) => {
 
         });
     }
-    else if (path === '/cats/add-cat' && req.method === 'POST') {
+    else if (pathname === '/cats/add-cat' && req.method === 'POST') {
         let form = new formidable.IncomingForm();
+        form.uploadDir = './content/images/';
+        form.keepExtensions = true;
+
 
         form.parse(req, (err, fields, files) => {
             if (err) {
                 return err;
             }
 
-            let oldPath = files.upload.path;
-            let newPath = './content/images/' + files.upload.name;
+            // let oldPath = files.upload.path;
+            // let newPath = './content/images/' + files.upload.name;
 
-            fs.rename(oldPath, newPath, (err) => {
-                if (err) throw err;
-                console.log('File was uploaded successfully')
-            });
+            // fs.rename(oldPath, newPath, (err) => {
+            //     if (err) throw err;
+            //     console.log('File was uploaded successfully')
+            // });
 
             fs.readFile('./data/cats.json', (err, data) => {
                 if (err) throw err;
