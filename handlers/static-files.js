@@ -50,7 +50,7 @@ module.exports = (req, res) => {
             });
         }
         else {
-            fs.readFile(`./${pathname}`, utf-8, (err, data) => {
+            fs.readFile(`./${pathname}`, utf8, (err, data) => {
                 if (err) {
                     console.log(err);
                     res.writeHead(404, { 'Content-Type': 'text/plain' });
