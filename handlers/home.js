@@ -13,20 +13,41 @@ module.exports = (req, res) => {
         );
 
         fs.readFile(filepath, (err, data) => {
-            if(err) {
+            if (err) {
                 console.log(err);
-                res.writeHead(404, {'Content-Type': 'text/plain'});
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
                 res.write('404 not found');
                 res.end();
                 return;
             }
 
-            res.writeHead(200, {'Content-Type': 'text/html'});
+            fs.readFile('./data/cats.json', (err, catsData) => {
+                if (err) {
+                    return err;
+                }
 
-            res.write(data);
-            res.end();
+                let cats = JSON.parse(catsData);
+
+                let modifiedCats = cats.map((cat) => `<li>
+                    <img src="${path.join('./content/images/' + cat.image)}" alt="${cat.name}">
+                    <h3>${cat.name}</h3>
+                    <p><span>Breed: </span>${cat.breed}</p>
+                    <p><span>Description: </span>${cat.description}</p>
+                    <ul class="buttons>
+                    <li class="btn edit"><a href="/cats-edit/${cat.id}">Change Info</a></li>
+                    <li class="btn delete"><a href="/cats-find-new-home/${cat.id}">New Home</a></li>
+                    </ul>
+                </li>`);
+
+                let modifiedData = data.toString().replace('{{cats}}', modifiedCats);
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.write(modifiedData);
+                res.end();
+            });
+
+
         })
-    } 
+    }
     else {
         return true;
     }
