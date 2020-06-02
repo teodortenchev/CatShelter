@@ -46,6 +46,7 @@ module.exports = (req, res) => {
         let form = new formidable.IncomingForm();
         form.uploadDir = './content/images/';
         form.keepExtensions = true;
+        
 
 
         form.parse(req, (err, fields, files) => {
@@ -61,6 +62,8 @@ module.exports = (req, res) => {
             //     console.log('File was uploaded successfully')
             // });
 
+            
+
             fs.readFile('./data/cats.json', (err, data) => {
                 if (err) throw err;
 
@@ -69,7 +72,7 @@ module.exports = (req, res) => {
                 allCats.push({
                     id: allCats.length + 1,
                     ...fields,
-                    image: files.upload.name
+                    image: files.upload.path
                 });
 
                 let json = JSON.stringify(allCats);
