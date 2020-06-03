@@ -143,8 +143,6 @@ module.exports = (req, res) => {
 
     }
     else if (pathname.includes('/cats-edit') && req.method === 'GET') {
-
-
         let filepath = path.normalize(
             path.join(__dirname, '../views/editCat.html')
         );
@@ -165,15 +163,14 @@ module.exports = (req, res) => {
 
                 let cats = JSON.parse(catsData);
 
-                let catId = Number(req.url.split('/')[2]);
-
-                console.log(typeof (catId));
+                let catId = Number(req.url.split('/')[2]);                
 
                 let cat = cats.find(x => x.id === catId);
 
 
                 //invalid ID is accessed and no cat is found with given id. Redirect to home
                 if (cat === undefined) {
+                    console.log('Cat not found')
                     res.writeHead(301, { 'Location': '/' });
                     res.end();
                     return;
@@ -195,25 +192,12 @@ module.exports = (req, res) => {
                 res.write(modifiedData);
                 res.end();
             });
-
-               
-
-
-
-
-
                 // cat.name = "Zvezdichko";
                 // console.log(cat.name);
 
                 // cats.splice(catId - 1, 1, cat);
-
-
             });
-
-
         });
-
-
     }
     else if (pathname.includes('/cats-find-new-home') && req.method === 'GET') {
 

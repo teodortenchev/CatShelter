@@ -37,7 +37,7 @@ module.exports = (req, res) => {
                     <li class="btn edit"><a href="/cats-edit/${cat.id}">Change Info</a></li>
                     <li class="btn delete"><a href="/cats-find-new-home/${cat.id}">New Home</a></li>
                     </ul>
-                </li>`);
+                </li>`).join('');
 
                 let modifiedData = data.toString().replace('{{cats}}', modifiedCats);
                 res.writeHead(200, { 'Content-Type': 'text/html' });
