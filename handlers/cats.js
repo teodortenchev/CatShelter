@@ -46,7 +46,7 @@ module.exports = (req, res) => {
         let form = new formidable.IncomingForm();
         form.uploadDir = './content/images/';
         form.keepExtensions = true;
-        
+
 
 
         form.parse(req, (err, fields, files) => {
@@ -62,7 +62,7 @@ module.exports = (req, res) => {
             //     console.log('File was uploaded successfully')
             // });
 
-            
+
 
             fs.readFile('./data/cats.json', (err, data) => {
                 if (err) throw err;
@@ -78,7 +78,7 @@ module.exports = (req, res) => {
                 let json = JSON.stringify(allCats);
 
                 fs.writeFile('./data/cats.json', json, () => {
-                    res.writeHead(302, { 'Location' : '/'});
+                    res.writeHead(302, { 'Location': '/' });
                     res.end();
                 });
             });
@@ -89,7 +89,7 @@ module.exports = (req, res) => {
     else if (pathname === '/cats/add-breed' && req.method === 'GET') {
         let filepath = path.normalize(
             path.join(__dirname, '../views/addBreed.html')
-        )
+        );
 
         fs.readFile(filepath, (err, data) => {
             if (err) {
@@ -140,6 +140,88 @@ module.exports = (req, res) => {
 
 
 
+
+    }
+    else if (pathname.includes('/cats-edit') && req.method === 'GET') {
+
+
+        let filepath = path.normalize(
+            path.join(__dirname, '../views/editCat.html')
+        );
+
+
+        fs.readFile(filepath, (err, data) => {
+            if (err) {
+                console.log(err);
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.write('404 not found');
+                res.end();
+                return;
+            }
+
+            fs.readFile('./data/cats.json', (err, catsData) => {
+
+                if (err) throw err;
+
+                let cats = JSON.parse(catsData);
+
+                let catId = Number(req.url.split('/')[2]);
+
+                console.log(typeof (catId));
+
+                let cat = cats.find(x => x.id === catId);
+
+
+                //invalid ID is accessed and no cat is found with given id. Redirect to home
+                if (cat === undefined) {
+                    res.writeHead(301, { 'Location': '/' });
+                    res.end();
+                    return;
+                }
+
+
+                fs.readFile('./data/breeds.json', (err, breedsData) => {
+                if (err) {
+                    return err;
+                }
+
+                let breeds = JSON.parse(breedsData);
+                let catBreedsPlaceholder = breeds.map((breed) => `<option value="${breed}">${breed}</option>`);
+                let modifiedData = data.toString().replace(`{{catBreeds}}`, catBreedsPlaceholder)
+                    .replace(`{{name}}`, cat.name)
+                    .replace(`{{description}}`, cat.description);
+
+                res.writeHead(200, { 'Content-Type': 'text/html' });
+                res.write(modifiedData);
+                res.end();
+            });
+
+               
+
+
+
+
+
+                // cat.name = "Zvezdichko";
+                // console.log(cat.name);
+
+                // cats.splice(catId - 1, 1, cat);
+
+
+            });
+
+
+        });
+
+
+    }
+    else if (pathname.includes('/cats-find-new-home') && req.method === 'GET') {
+
+    }
+    else if (pathname.includes('/cats-edit') && req.method === 'POST') {
+
+    }
+    else if (pathname.includes('/cats-find-new-home') && req.method === 'POST') {
 
     }
     else {

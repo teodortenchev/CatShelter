@@ -40,8 +40,6 @@ module.exports = (req, res) => {
                     return;
                 }
 
-                console.log(pathname);
-                console.log(getContentType(pathname));
                 res.writeHead(200,
                     { 'Content-Type': getContentType(pathname) });
 
@@ -59,8 +57,6 @@ module.exports = (req, res) => {
                     return;
                 }
 
-                console.log(pathname);
-                console.log(getContentType(pathname));
                 res.writeHead(200,
                     { 'Content-Type': getContentType(pathname) });
 
