@@ -171,7 +171,7 @@ module.exports = (req, res) => {
                 //invalid ID is accessed and no cat is found with given id. Redirect to home
                 if (cat === undefined) {
                     console.log('Cat not found')
-                    res.writeHead(301, { 'Location': '/' });
+                    res.writeHead(302, { 'Location': '/' });
                     res.end();
                     return;
                 }
